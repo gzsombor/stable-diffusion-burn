@@ -4,8 +4,7 @@ use std::error::Error;
 use std::io::Read;
 
 use burn::{
-    config::Config,
-    module::{Module, Param},
+    module::Module,
     nn::{self, conv},
     tensor::{backend::Backend, Data, Tensor},
 };

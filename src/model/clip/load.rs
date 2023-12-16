@@ -1,12 +1,6 @@
-use burn::tensor::ElementConversion;
 use std::error::Error;
 
-use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
-};
+use burn::tensor::backend::Backend;
 
 use super::*;
 use crate::model::load::*;
@@ -71,7 +65,7 @@ pub fn load_clip<B: Backend>(path: &str, device: &B::Device) -> Result<CLIP<B>, 
         load_tensor("weight", &format!("{}/position_embedding", path), device)?.into();
 
     let n_layer = load_usize::<B>("n_layer", path, device)?;
-    let mut blocks = (0..n_layer)
+    let blocks = (0..n_layer)
         .into_iter()
         .map(|i| {
             load_residual_decoder_attention_block::<B>(&format!("{}/blocks/{}", path, i), device)

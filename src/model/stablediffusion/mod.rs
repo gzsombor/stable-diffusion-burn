@@ -3,7 +3,7 @@ pub mod load;
 use burn::{
     config::Config,
     module::{Module, Param},
-    tensor::{backend::Backend, BasicOps, Data, Distribution, Float, Int, Tensor},
+    tensor::{backend::Backend, Distribution, Int, Tensor},
 };
 
 use num_traits::ToPrimitive;
@@ -54,8 +54,6 @@ impl<B: MyBackend> StableDiffusion<B> {
         unconditional_guidance_scale: f64,
         n_steps: usize,
     ) -> Vec<Vec<u8>> {
-        let [n_batch, _, _] = context.dims();
-
         let latent = self.sample_latent(
             context,
             unconditional_context,

@@ -3,12 +3,7 @@ use crate::model::load::*;
 
 use std::error::Error;
 
-use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
-};
+use burn::tensor::{backend::Backend, Tensor};
 
 pub fn load_group_norm<B: Backend>(
     path: &str,

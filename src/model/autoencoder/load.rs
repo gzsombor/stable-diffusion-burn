@@ -1,13 +1,10 @@
-use super::GroupNorm;
 use crate::model::load::*;
 
 use std::error::Error;
 
 use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
+    module::Module,
+    tensor::backend::Backend,
 };
 
 use super::*;
@@ -134,7 +131,7 @@ fn load_decoder<B: Backend>(path: &str, device: &B::Device) -> Result<Decoder<B>
     let mid = load_mid(&format!("{}/{}", path, "mid"), device)?;
 
     let n_block = load_usize::<B>("n_block", path, device)?;
-    let mut blocks = (0..n_block)
+    let blocks = (0..n_block)
         .into_iter()
         .map(|i| load_decoder_block::<B>(&format!("{}/blocks/{}", path, i), device))
         .collect::<Result<Vec<_>, _>>()?;
@@ -158,7 +155,7 @@ fn load_encoder<B: Backend>(path: &str, device: &B::Device) -> Result<Encoder<B>
     let mid = load_mid(&format!("{}/{}", path, "mid"), device)?;
 
     let n_block = load_usize::<B>("n_block", path, device)?;
-    let mut blocks = (0..n_block)
+    let blocks = (0..n_block)
         .into_iter()
         .map(|i| load_encoder_block::<B>(&format!("{}/blocks/{}", path, i), device))
         .collect::<Result<Vec<_>, _>>()?;

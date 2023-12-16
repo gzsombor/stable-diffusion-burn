@@ -5,9 +5,8 @@ use burn::{
     module::{Module, Param},
     nn,
     tensor::{
-        activation::{sigmoid, softmax},
+        activation::sigmoid,
         backend::Backend,
-        module::embedding,
         Distribution, Int, Tensor,
     },
 };
@@ -53,7 +52,7 @@ pub struct CLIP<B: Backend> {
 
 impl<B: MyBackend> CLIP<B> {
     pub fn forward(&self, x: Tensor<B, 2, Int>) -> Tensor<B, 3> {
-        let [n_batch, seq_len] = x.dims();
+        let [_n_batch, seq_len] = x.dims();
 
         let mask = Tensor::from_primitive(B::attn_decoder_mask(seq_len, &x.device()));
 

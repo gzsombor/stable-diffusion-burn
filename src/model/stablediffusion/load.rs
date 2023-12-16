@@ -1,12 +1,6 @@
-use burn::tensor::ElementConversion;
 use std::error::Error;
 
-use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
-};
+use burn::tensor::backend::Backend;
 
 use super::*;
 use crate::model::{

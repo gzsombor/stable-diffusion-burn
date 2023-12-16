@@ -23,8 +23,6 @@ impl GroupNormConfig {
             self.n_group
         );
 
-        let n_per_group = self.n_channel / self.n_group;
-
         let gamma = Tensor::ones([self.n_channel]).into();
         let beta = Tensor::zeros([self.n_channel]).into();
 
