@@ -23,62 +23,14 @@ pub trait Backend: burn::tensor::backend::Backend {
     }
 }
 
-use burn::tensor::ops::TensorOps;
-use burn::tensor::Float;
-use burn_tch::{self, TchElement, TchTensor};
-use tch;
+use burn_wgpu::{self, Wgpu, AutoGraphicsApi};
+type WgpuBackend = Wgpu<AutoGraphicsApi, f32, i32>;
 
-impl<E: TchElement> Backend for burn_tch::TchBackend<E> {
-    fn qkv_attention(
-        q: Self::TensorPrimitive<3>,
-        k: Self::TensorPrimitive<3>,
-        v: Self::TensorPrimitive<3>,
-        mask: Option<Self::TensorPrimitive<2>>,
-        n_head: usize,
-    ) -> Self::TensorPrimitive<3> {
-        let q = Tensor::from_primitive(q);
-        let k = Tensor::from_primitive(k);
-        let v = Tensor::from_primitive(v);
-
-        let [n_batch, q_ctx, n_state] = q.dims();
-        let [_, k_ctx, _] = k.dims();
-        let n_hstate = n_state / n_head;
-
-        let rearrange = |t: Tensor<Self, 3>| {
-            let [_, n_ctx, _] = t.dims();
-            t.reshape([n_batch, n_ctx, n_head, n_hstate])
-                .swap_dims(1, 2)
-        };
-
-        let q = rearrange(q).into_primitive();
-        let k = rearrange(k).into_primitive();
-        let v = rearrange(v).into_primitive();
-
-        // for some reason torch crashes when mask is None
-        let mask = mask.unwrap_or_else(|| {
-            Tensor::<Self, 2, Float>::zeros_device([q_ctx, k_ctx], &Self::device(&v))
-                .into_primitive()
-        });
-
-        Tensor::<Self, 4>::from_primitive(TchTensor::new(
-            tch::Tensor::scaled_dot_product_attention(
-                &q.tensor,
-                &k.tensor,
-                &v.tensor,
-                Some(mask.tensor),
-                0.0,
-                false,
-            ),
-        ))
-        .swap_dims(1, 2)
-        .flatten(2, 3)
-        .into_primitive()
-    }
-}
+impl Backend for WgpuBackend {}
 
 use burn_autodiff;
 
-impl<B: Backend> Backend for burn_autodiff::ADBackendDecorator<B> {}
+impl<B: Backend> Backend for burn_autodiff::Autodiff<B> {}
 
 use std::f32::NEG_INFINITY;
 

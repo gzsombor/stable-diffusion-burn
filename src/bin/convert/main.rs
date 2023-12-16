@@ -5,13 +5,11 @@ use std::process;
 use stablediffusion::model::stablediffusion::{load::load_stable_diffusion, StableDiffusion};
 
 use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
+    module::Module,
+    tensor::backend::Backend,
 };
 
-use burn_ndarray::{NdArrayBackend, NdArrayDevice};
+use burn_ndarray::{NdArray, NdArrayDevice};
 
 use burn::record::{self, BinFileRecorder, FullPrecisionSettings, Recorder};
 
@@ -37,7 +35,7 @@ fn save_model_file<B: Backend>(
 }
 
 fn main() {
-    type Backend = NdArrayBackend<f32>;
+    type Backend = NdArray<f32>;
     let device = NdArrayDevice::Cpu;
 
     let args: Vec<String> = env::args().collect();

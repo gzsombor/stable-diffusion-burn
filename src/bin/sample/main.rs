@@ -4,19 +4,11 @@ use stablediffusion::{
 };
 
 use burn::{
-    config::Config,
-    module::{Module, Param},
-    nn,
-    tensor::{backend::Backend, Tensor},
+    module::Module,
+    tensor::backend::Backend,
 };
 
-cfg_if::cfg_if! {
-    if #[cfg(feature = "wgpu-backend")] {
-        use burn_wgpu::{WgpuBackend, WgpuDevice, AutoGraphicsApi};
-    } else {
-        use burn_tch::{TchBackend, TchDevice};
-    }
-}
+use burn_wgpu::{AutoGraphicsApi, Wgpu, WgpuDevice};
 
 use std::env;
 use std::io;
@@ -33,15 +25,8 @@ fn load_stable_diffusion_model_file<B: Backend>(
 }
 
 fn main() {
-    cfg_if::cfg_if! {
-        if #[cfg(feature = "wgpu-backend")] {
-            type Backend = WgpuBackend<AutoGraphicsApi, f32, i32>;
-            let device = WgpuDevice::BestAvailable;
-        } else {
-            type Backend = TchBackend<f32>;
-            let device = TchDevice::Cuda(0);
-        }
-    }
+    type Backend = Wgpu<AutoGraphicsApi, f32, i32>;
+    let device = WgpuDevice::BestAvailable;
 
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 7 {
