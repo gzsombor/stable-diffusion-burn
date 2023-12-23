@@ -1,7 +1,13 @@
 [package]
 name = "stablediffusion-wgpu"
 version = "0.1.0"
+description = "Stable diffusion burn with wgpu"
 edition = "2021"
+license = "MIT"
+documentation = "https://docs.rs/stablediffusion-wgpu"
+repository = "https://github.com/neka-nat/stable-diffusion-burn-wgpu"
+homepage = "https://github.com/neka-nat/stable-diffusion-burn-wgpu"
+keywords = ["stable-diffusion", "wgpu"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,5 +1,5 @@
 use stablediffusion_wgpu::{
-    model::stablediffusion::{load::load_stable_diffusion, *},
+    model::stablediffusion::*,
     model_download::download_model,
     tokenizer::SimpleTokenizer,
 };
