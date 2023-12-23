@@ -1,8 +1,7 @@
 use regex::Regex;
 use std::collections::HashMap;
 
-use std::fs::File;
-use std::io::{self, BufRead};
+use std::io::{self};
 
 fn bytes_to_unicode() -> Vec<(u8, char)> {
     let mut bs: Vec<u8> = ('!' as u8..='~' as u8)
@@ -38,14 +37,14 @@ fn whitespace_clean(text: &str) -> String {
     text.split_whitespace().collect::<Vec<&str>>().join(" ")
 }
 
-fn load_merges(path: &str) -> io::Result<Vec<(String, String)>> {
-    let file = File::open(&path)?;
-    let reader = io::BufReader::new(file);
+fn load_merges() -> io::Result<Vec<(String, String)>> {
+    let read_str = include_str!("../resources/bpe_simple_vocab_16e6.txt")
+        .split("\n")
+        .collect::<Vec<&str>>();
 
     let mut merges = Vec::new();
 
-    for line in reader.lines() {
-        let line = line?;
+    for line in read_str.iter() {
         let mut words = line.split_whitespace();
 
         if let (Some(word1), Some(word2)) = (words.next(), words.next()) {
@@ -89,7 +88,7 @@ impl SimpleTokenizer {
         let byte_encoder: HashMap<_, _> = byte_unicode_values.iter().cloned().collect();
         let byte_decoder = byte_encoder.iter().map(|(k, v)| (*v, *k)).collect();
 
-        let merges = load_merges("resources/bpe_simple_vocab_16e6.txt")?;
+        let merges = load_merges()?;
         let merges = merges[1..49152 - 256 - 2 + 1].to_vec();
 
         let vocab = construct_vocab(byte_unicode_values.into_iter().map(|(_, u)| u), &merges[..]);
