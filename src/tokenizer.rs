@@ -89,7 +89,7 @@ impl SimpleTokenizer {
         let byte_encoder: HashMap<_, _> = byte_unicode_values.iter().cloned().collect();
         let byte_decoder = byte_encoder.iter().map(|(k, v)| (*v, *k)).collect();
 
-        let merges = load_merges("bpe_simple_vocab_16e6.txt")?;
+        let merges = load_merges("resources/bpe_simple_vocab_16e6.txt")?;
         let merges = merges[1..49152 - 256 - 2 + 1].to_vec();
 
         let vocab = construct_vocab(byte_unicode_values.into_iter().map(|(_, u)| u), &merges[..]);
