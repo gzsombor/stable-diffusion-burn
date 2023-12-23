@@ -1,18 +1,15 @@
 use stablediffusion_wgpu::{
     model::stablediffusion::{load::load_stable_diffusion, *},
+    model_download::download_model,
     tokenizer::SimpleTokenizer,
 };
 
-use burn::{
-    module::Module,
-    tensor::backend::Backend,
-};
+use burn::{module::Module, tensor::backend::Backend};
 
 use burn_wgpu::{AutoGraphicsApi, Wgpu, WgpuDevice};
 
-use std::env;
-use std::io;
 use std::process;
+use tokio;
 
 use burn::record::{self, BinFileRecorder, FullPrecisionSettings, Recorder};
 
@@ -24,43 +21,42 @@ fn load_stable_diffusion_model_file<B: Backend>(
         .map(|record| StableDiffusionConfig::new().init().load_record(record))
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     type Backend = Wgpu<AutoGraphicsApi, f32, i32>;
     let device = WgpuDevice::BestAvailable;
 
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 7 {
-        eprintln!("Usage: {} <model_type(burn or dump)> <model_name> <unconditional_guidance_scale> <n_diffusion_steps> <prompt> <output_image_name>", args[0]);
+    if args.len() != 5 {
+        eprintln!("Usage: {} <unconditional_guidance_scale> <n_diffusion_steps> <prompt> <output_image_name>", args[0]);
         process::exit(1);
     }
 
-    let model_type = &args[1];
-    let model_name = &args[2];
-    let unconditional_guidance_scale: f64 = args[3].parse().unwrap_or_else(|_| {
+    let unconditional_guidance_scale: f64 = args[1].parse().unwrap_or_else(|_| {
         eprintln!("Error: Invalid unconditional guidance scale.");
         process::exit(1);
     });
-    let n_steps: usize = args[4].parse().unwrap_or_else(|_| {
+    let n_steps: usize = args[2].parse().unwrap_or_else(|_| {
         eprintln!("Error: Invalid number of diffusion steps.");
         process::exit(1);
     });
-    let prompt = &args[5];
-    let output_image_name = &args[6];
+    let prompt = &args[3];
+    let output_image_name = &args[4];
+
+    println!("Downloading model...");
+    let model_name = download_model().await.unwrap_or_else(|err| {
+        eprintln!("Error downloading model: {}", err);
+        process::exit(1);
+    });
 
     println!("Loading tokenizer...");
     let tokenizer = SimpleTokenizer::new().unwrap();
     println!("Loading model...");
-    let sd: StableDiffusion<Backend> = if model_type == "burn" {
-        load_stable_diffusion_model_file(model_name).unwrap_or_else(|err| {
+    let sd: StableDiffusion<Backend> = load_stable_diffusion_model_file(model_name.as_str())
+        .unwrap_or_else(|err| {
             eprintln!("Error loading model: {}", err);
             process::exit(1);
-        })
-    } else {
-        load_stable_diffusion(model_name, &device).unwrap_or_else(|err| {
-            eprintln!("Error loading model dump: {}", err);
-            process::exit(1);
-        })
-    };
+        });
 
     let sd = sd.to_device(&device);
 

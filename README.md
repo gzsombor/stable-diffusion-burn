@@ -4,20 +4,12 @@ Stable-Diffusion-Burn is a Rust-based project which ports the V1 stable diffusio
 
 ## How To Use
 
-### Step 1: Download the Model and Set Environment Variables
+### Run the Sample Binary
 
-Start by downloading the SDv1-4.bin model provided on HuggingFace.
-
-```bash
-wget https://huggingface.co/Gadersd/Stable-Diffusion-Burn/resolve/main/V1/SDv1-4.bin
-```
-
-### Step 2: Run the Sample Binary
-
-Invoke the sample binary provided in the rust code. By default, torch is used. The WGPU backend is unstable for SD but may work well in the future as burn-wpu is optimized.
+Invoke the sample binary provided in the rust code.
 
 ```bash
-cargo run --release --bin sample burn SDv1-4 7.5 20 "An ancient mossy stone." img
+cargo run --release --bin sample 7.5 20 "An ancient mossy stone." img
 ```
 
 This command will generate an image according to the provided prompt, which will be saved as 'img0.png'.

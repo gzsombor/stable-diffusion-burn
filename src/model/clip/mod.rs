@@ -4,11 +4,7 @@ use burn::{
     config::Config,
     module::{Module, Param},
     nn,
-    tensor::{
-        activation::sigmoid,
-        backend::Backend,
-        Distribution, Int, Tensor,
-    },
+    tensor::{activation::sigmoid, backend::Backend, Distribution, Int, Tensor},
 };
 
 use crate::backend::Backend as MyBackend;

@@ -7,10 +7,7 @@ use burn::{
         conv::{Conv2d, Conv2dConfig},
         PaddingConfig2d,
     },
-    tensor::{
-        backend::Backend,
-        Tensor,
-    },
+    tensor::{backend::Backend, Tensor},
 };
 
 use super::groupnorm::*;

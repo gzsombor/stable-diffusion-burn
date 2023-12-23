@@ -2,10 +2,7 @@ use crate::model::load::*;
 
 use std::error::Error;
 
-use burn::{
-    module::Module,
-    tensor::backend::Backend,
-};
+use burn::{module::Module, tensor::backend::Backend};
 
 use super::*;
 use crate::model::groupnorm::load::load_group_norm;

@@ -4,10 +4,7 @@ use std::process;
 
 use stablediffusion_wgpu::model::stablediffusion::{load::load_stable_diffusion, StableDiffusion};
 
-use burn::{
-    module::Module,
-    tensor::backend::Backend,
-};
+use burn::{module::Module, tensor::backend::Backend};
 
 use burn_ndarray::{NdArray, NdArrayDevice};
 

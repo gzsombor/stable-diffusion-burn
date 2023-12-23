@@ -23,7 +23,7 @@ pub trait Backend: burn::tensor::backend::Backend {
     }
 }
 
-use burn_wgpu::{self, Wgpu, AutoGraphicsApi};
+use burn_wgpu::{self, AutoGraphicsApi, Wgpu};
 type WgpuBackend = Wgpu<AutoGraphicsApi, f32, i32>;
 
 impl Backend for WgpuBackend {}
