@@ -1,4 +1,4 @@
-use stablediffusion::{
+use stablediffusion_wgpu::{
     model::stablediffusion::{load::load_stable_diffusion, *},
     tokenizer::SimpleTokenizer,
 };

@@ -17,7 +17,6 @@ wget https://huggingface.co/Gadersd/Stable-Diffusion-Burn/resolve/main/V1/SDv1-4
 Invoke the sample binary provided in the rust code. By default, torch is used. The WGPU backend is unstable for SD but may work well in the future as burn-wpu is optimized.
 
 ```bash
-# Arguments: <model_type(burn or dump)> <model> <unconditional_guidance_scale> <n_diffusion_steps> <prompt> <output_image>
 cargo run --release --bin sample burn SDv1-4 7.5 20 "An ancient mossy stone." img
 ```
 

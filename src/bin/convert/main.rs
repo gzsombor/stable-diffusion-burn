@@ -2,7 +2,7 @@ use std::env;
 use std::error::Error;
 use std::process;
 
-use stablediffusion::model::stablediffusion::{load::load_stable_diffusion, StableDiffusion};
+use stablediffusion_wgpu::model::stablediffusion::{load::load_stable_diffusion, StableDiffusion};
 
 use burn::{
     module::Module,
