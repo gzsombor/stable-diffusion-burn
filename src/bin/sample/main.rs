@@ -86,20 +86,3 @@ fn save_images(images: &Vec<Vec<u8>>, basepath: &str, width: u32, height: u32) -
 
     Ok(())
 }
-
-// save red test image
-fn save_test_image() -> ImageResult<()> {
-    let width = 256;
-    let height = 256;
-    let raw: Vec<_> = (0..width * height)
-        .into_iter()
-        .flat_map(|i| {
-            let row = i / width;
-            let red = (255.0 * row as f64 / height as f64) as u8;
-
-            [red, 0, 0]
-        })
-        .collect();
-
-    image::save_buffer("red.png", &raw[..], width, height, Rgb8)
-}
