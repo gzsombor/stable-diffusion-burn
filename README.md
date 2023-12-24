@@ -1,4 +1,5 @@
 # Stable-Diffusion-Burn-Wgpu
+[![crates.io](https://img.shields.io/crates/v/stablediffusion-wgpu.svg)](https://crates.io/crates/stablediffusion-wgpu)
 
 Stable-Diffusion-Burn is a Rust-based project which ports the V1 stable diffusion model into the deep learning framework, Burn. This repository is licensed under the MIT Licence.
 
