@@ -17,7 +17,7 @@ burn-ndarray = "0.11.1"
 burn-autodiff = "0.11.1"
 burn-wgpu = "0.11.1"
 serde = {version = "1.0.171", features = ["std", "derive"]}
-npy = "0.4.0"
+npyz = "0.8"
 num-traits = "0.2.15"
 rust_tokenizers = "8.1.0"
 regex = "1.9.1"

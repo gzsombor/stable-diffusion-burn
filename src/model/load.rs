@@ -1,7 +1,7 @@
-use npy::{self, NpyData};
+use npyz::{self, NpyFile};
 use num_traits::cast::ToPrimitive;
-use std::error::Error;
-use std::io::Read;
+use std::{error::Error, fs::File};
+use std::io::BufReader;
 
 use burn::{
     module::Module,
@@ -12,13 +12,11 @@ use burn::{
 use burn::tensor::ElementConversion;
 
 pub fn numpy_to_tensor<B: Backend, const D: usize>(
-    numpy_data: NpyData<f32>,
+    numpy_data: &[f32],
     device: &B::Device,
 ) -> Tensor<B, D> {
-    let v = numpy_data.to_vec();
-
-    let shape: Vec<_> = v[0..D].into_iter().map(|&v| v as usize).collect();
-    let data: Vec<B::FloatElem> = v[D..].into_iter().map(|e| e.elem()).collect();
+    let shape: Vec<_> = numpy_data[0..D].into_iter().map(|&v| v as usize).collect();
+    let data: Vec<B::FloatElem> = numpy_data[D..].into_iter().map(|e| e.elem()).collect();
 
     Tensor::from_data_device(Data::new(data, shape.into()), device)
 }
@@ -30,12 +28,11 @@ pub fn load_tensor<B: Backend, const D: usize>(
 ) -> Result<Tensor<B, D>, Box<dyn Error>> {
     let tensor_path = format!("{}/{}.npy", path, name);
 
-    let mut buf = vec![];
-    std::fs::File::open(&tensor_path)?.read_to_end(&mut buf)?;
+    let reader = BufReader::new(File::open(&tensor_path)?);
 
-    let tensor_numpy: NpyData<f32> = NpyData::from_bytes(&buf)?;
+    let tensor_numpy = NpyFile::new(reader)?.into_vec::<f32>()?;
 
-    let tensor = numpy_to_tensor(tensor_numpy, device);
+    let tensor = numpy_to_tensor(&tensor_numpy, device);
 
     println!("{}", tensor_path);
 
